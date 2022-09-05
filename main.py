@@ -1,5 +1,5 @@
 #Roee's Bank
-import sys,random,rstr, typing
+import sys,random,rstr, typing, json
 from tkinter import Tk, ttk
 from tkinter import *
 
@@ -39,7 +39,7 @@ class GUI:
         self.login()
     def login(self):
         for widget in self.root.winfo_children():
-            widget.place_forget()
+            widget.pack_forget()
         self.frame = Frame(self.root, width=self.size[0], height=self.size[1], background="white")
         self.frame.pack()
         frame_bg = self.frame["background"]
@@ -57,7 +57,39 @@ class GUI:
         self.input2.place(x=self.size[0]-300,y=160)
         self.login_button = ttk.Button(self.frame, width=30, text="Login")
         self.login_button.place(x=self.size[0]/2-100, y=250)
-        self.register_label = ttk.Label(self.frame, text="Aren't having an account?", foreground="blue", background=frame_bg)
+        self.register_label = ttk.Label(self.frame, text="Aren't having an account yet?", foreground="blue", background=frame_bg)
+        self.register_label.place(x=120,y=300)
+        self.preregister_button = ttk.Button(self.frame, width=20, text="Register Here!", command=self.register)
+        self.preregister_button.place(x=350,y=300)
+    def register(self):
+        for widget in self.root.winfo_children():
+            widget.pack_forget()
+        self.frame = Frame(self.root, width=self.size[0], height=self.size[1], background="white")
+        self.frame.pack()
+        frame_bg = self.frame["background"]
+        self.big_title1 = ttk.Label(self.frame, text="Register to my bank!", foreground="red", background=frame_bg)
+        self.big_title1.place(x=self.size[0]/2-60,y=10)
+        self.big_title2 = ttk.Label(self.frame, text="Enter your account info here", foreground="red",background=frame_bg)
+        self.big_title2.place(x=self.size[0]/2-80,y=40)
+        self.user_code_label = ttk.Label(self.frame, text="User Code:", foreground="black",background=frame_bg)
+        self.user_code_label.place(x=120,y=100)
+        self.password_label = ttk.Label(self.frame, text="Password:", foreground="black",background=frame_bg)
+        self.password_label.place(x=120, y=160)
+        self.phone_num_label = ttk.Label(self.frame, text="Phone Number:", foreground="black",background=frame_bg)
+        self.phone_num_label.place(x=120, y=220)
+        self.input1 = ttk.Entry(self.frame, width=35)
+        self.input1.place(x=self.size[0]-300,y=100)
+        self.input2 = ttk.Entry(self.frame, width=35)
+        self.input2.place(x=self.size[0]-300,y=160)
+        self.input3 = ttk.Entry(self.frame, width=35)
+        self.input3.place(x=self.size[0]-300,y=220)
+        self.register_button = ttk.Button(self.frame, width=30, text="Register")
+        self.register_button.place(x=self.size[0]/2-100, y=300)
+        self.login_label = ttk.Label(self.frame, text="Aren't having an account yet?", foreground="blue", background=frame_bg)
+        self.login_label.place(x=120,y=350)
+        self.prelogin_button = ttk.Button(self.frame, width=20, text="Login Here!", command=self.login)
+        self.prelogin_button.place(x=350,y=350)
+        reg = lambda user_code,password,phone_num: (user_code,password,phone_num_label)
 root = Tk()
 gui = GUI(root)
 root.mainloop()
