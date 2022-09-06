@@ -22,6 +22,14 @@ class Account:
                     return True, account
                 else: continue
             return False
+    def edit_profile(self):
+        pass
+    def get_creditcard(self):
+        pass
+    def transfer(self):
+        pass
+    def deposit(self):
+        pass
 
 
 
