@@ -4,11 +4,15 @@ from tkinter import Tk, ttk
 from tkinter import *
 
 class Account:
-    def __init(self, user_code, password):
+    def __init__(self, user_code, password, phone_num):
         self.user_code = user_code
         self.password = password
+        self.phone_num = phone_num
     def register(self):
-        pass
+        account_info = {f"{self.user_code}": [self.password]}
+        file = open("database/database.json")
+        json.dump(account_info, file)
+        file.close()
     def login(self):
         pass
 
@@ -83,13 +87,17 @@ class GUI:
         self.input2.place(x=self.size[0]-300,y=160)
         self.input3 = ttk.Entry(self.frame, width=35)
         self.input3.place(x=self.size[0]-300,y=220)
-        self.register_button = ttk.Button(self.frame, width=30, text="Register")
+        self.register_button = ttk.Button(self.frame, width=30, text="Register", command=self.reg_account)
         self.register_button.place(x=self.size[0]/2-100, y=300)
         self.login_label = ttk.Label(self.frame, text="Aren't having an account yet?", foreground="blue", background=frame_bg)
         self.login_label.place(x=120,y=350)
         self.prelogin_button = ttk.Button(self.frame, width=20, text="Login Here!", command=self.login)
         self.prelogin_button.place(x=350,y=350)
-        reg = lambda user_code,password,phone_num: (user_code,password,phone_num_label)
+    def reg_account(self):
+        reg_info = (self.input1.get(),self.input2.get(),self.input3.get())
+        new_account = Account(reg_info[0],reg_info[1].reg_info[2])
+        new_account.register()
+
 root = Tk()
 gui = GUI(root)
 root.mainloop()
