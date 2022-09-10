@@ -6,7 +6,8 @@
                   "user_code": "Roee24102004",
                   "password": "Roeeheily123",
                   "phone_num": "0527051611",
-                  "balance": "250"
+                  "balance": "250",
+                  "cvv": "999"
             },
             {
                   "first_name": "admin",
@@ -14,7 +15,26 @@
                   "user_code": "admin",
                   "password": "admin",
                   "phone_num": "admin",
-                  "balance": "312"
+                  "balance": "312",
+                  "cvv": "999"
+            },
+            {
+                  "first_name": "Roee",
+                  "last_name": "Heily",
+                  "user_code": "RH170",
+                  "password": "Roeeheily123",
+                  "phone_num": "0527051611",
+                  "balance": "331",
+                  "cvv": "845"
+            },
+            {
+                  "first_name": "Roee",
+                  "last_name": "Heily",
+                  "user_code": "RH170",
+                  "password": "roeeheily123",
+                  "phone_num": "0527051611",
+                  "balance": "484",
+                  "cvv": "961"
             }
       ]
 }
