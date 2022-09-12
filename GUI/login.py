@@ -1,9 +1,13 @@
 import sys,random,rstr, typing, json
 from tkinter import Tk, ttk, messagebox
 from tkinter import *
+from main import GUI
 
-class login:
+
+class login():
     def __init__(self, master):
+        pass
+    def login(self):
         for widget in master.winfo_children():
             widget.pack_forget()
         self.frame = Frame(master, width=self.size[0], height=self.size[1], background="white")

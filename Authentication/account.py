@@ -22,14 +22,14 @@ class Account:
                 else: continue
             return False
     def edit_info(self, new_usercode: str, new_password: str, filename="database/database.json"):
+        print("worked")
         with open(filename, "r+") as file:
-            print("worked")
             json_file = json.load(file)
             for idx,account in enumerate(json_file["accounts"]):
                 if self.user_code == account["user_code"]  and self.password == account["password"]:
                     account["user_code"] = new_usercode
                     account["password"] = new_password
-                    break
+                    return account
                 else: pass
             file.seek(0)
             json.dump(json_file, file, indent=6)

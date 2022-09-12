@@ -3,7 +3,7 @@ import sys,random,rstr, typing, json
 from tkinter import Tk, ttk, messagebox
 from tkinter import *
 from Authentication.account import Account
-from GUI.login import login
+
 
 def has_digit(string: str):
     return any([char.isdigit() for char in string])
@@ -12,44 +12,6 @@ def toogle_entry(entry, var):
         entry.config(state=DISABLED)
     if var.get() == 1:
         entry.config(state=NORMAL)
-
-class Account:
-    def __init__(self, user_code, password):
-        self.user_code = user_code
-        self.password = password
-    def register(self, first_name, last_name,phone_num,filename="database/database.json"):
-        account_info = {"first_name": first_name,"last_name": last_name,"user_code": self.user_code, "password": self.password, "phone_num": phone_num, "balance": f"{random.randint(100, 500)}", "cvv": f"{random.randint(100, 999)}"}
-        with open(filename, "r+") as file:
-            json_file = json.load(file)
-            json_file["accounts"].append(account_info)
-            file.seek(0)
-            json.dump(json_file, file, indent=6)
-    def login(self, filename="database/database.json"):
-        with open(filename, "r+") as file:
-            json_file = json.load(file)
-            for idx,account in enumerate(json_file["accounts"]):
-                if self.user_code == account["user_code"]  and self.password == account["password"]:
-                    return True, account
-                else: continue
-            return False
-    def edit_info(self, new_usercode: str, new_password: str, filename="database/database.json"):
-        with open(filename, "r+") as file:
-            print("worked")
-            json_file = json.load(file)
-            for idx,account in enumerate(json_file["accounts"]):
-                if self.user_code == account["user_code"]  and self.password == account["password"]:
-                    account["user_code"] = new_usercode
-                    account["password"] = new_password
-                    break
-                else: pass
-            file.seek(0)
-            json.dump(json_file, file, indent=6)
-    def get_creditcard(self):
-        pass
-    def transfer(self):
-        pass
-    def deposit(self):
-        pass
 
 class GUI:
     def __init__(self,root):
@@ -61,13 +23,13 @@ class GUI:
         self.root.geometry(f"{self.size[0]}x{self.size[1]}")
         self.root.resizable(False,False)
         self.login()
-    def menu_bar(self, account: Account):
+    def menu_bar(self, account_info, user_account: Account):
         self.menu = Menu(self.root)
         self.root.config(menu=self.menu)
         main_menu = Menu(self.menu)
         self.menu.add_cascade(label="Main", menu=main_menu)
-        main_menu.add_command(label="Balance Info", command=lambda: self.view_balance(account))
-        main_menu.add_command(label="Edit Info", command=lambda: self.edit_info(account))
+        main_menu.add_command(label="Balance Info", command=lambda: self.view_balance(account_info))
+        main_menu.add_command(label="Edit Info", command=lambda: self.edit_info(account_info, user_account))
     def login(self):
         for widget in self.root.winfo_children():
             widget.pack_forget()
@@ -141,29 +103,29 @@ class GUI:
         else:
             messagebox.showerror(title="Register", message="Please fill all blank fields!")
     def login_account(self):
-        try:
+       # try:
             user_account = Account(self.input1.get(), self.input2.get())
             login = user_account.login()
             if login[0]: 
                 messagebox.showinfo(title="Login", message="Logged In!") 
-                self.main_screen(login[1])
+                self.main_screen(login[1], user_account)
             else: messagebox.showerror(title="Login", message="One or both of your creditionals are not valid!")
-        except:
-            messagebox.showerror(title="Login", message="One or both of your creditionals are not valid!")
-    def save_edit_info(self,popup: Toplevel, entry1: Entry, entry2: Entry, account: Account):
+        #except:
+            #messagebox.showerror(title="Login", message="One or both of your creditionals are not valid!")
+    def save_edit_info(self,popup: Toplevel, entry1: Entry, entry2: Entry, account,user_account: Account):
         ans = messagebox.askyesno(title="Edit Info", message="Are you sure you want to save this changes?",parent=popup)
         if ans: 
-            account.edit_info(str(entry1.get()), str(entry2.get()))
+            account = user_account.edit_info(entry1.get(), entry2.get())
             popup.destroy()
         else: pass
-    def main_screen(self, account: Account):
+    def main_screen(self, account_info, user_account: Account):
         for widget in self.root.winfo_children():
             widget.pack_forget()
-        self.menu_bar(account)
+        self.menu_bar(account_info, user_account)
         self.frame = Frame(self.root, width=self.size[0], height=self.size[1], background="white")
         self.frame.pack()
         frame_bg = self.frame["background"]
-    def view_balance(self,account: Account):
+    def view_balance(self,account_info):
         self.new_window = Toplevel(self.root)
         self.new_window.title("Balance Info")
         self.new_window.iconphoto(False,self.icon)
@@ -171,9 +133,9 @@ class GUI:
         self.new_window.resizable(False,False)
         frame = Frame(self.new_window, width=200, height=100, background="white")
         frame.pack()
-        balance_label = ttk.Label(self.new_window ,text=f"Current Balance: {account['balance']}$", font=("Roboto", "10"), background=frame["background"])
+        balance_label = ttk.Label(self.new_window ,text=f"Current Balance: {account_info['balance']}$", font=("Roboto", "10"), background=frame["background"])
         balance_label.place(x=frame["width"]/2-75,y=40)
-    def edit_info(self, account: Account):
+    def edit_info(self, account_info, user_account: Account):
         self.new_window = Toplevel(self.root)
         self.new_window.attributes("-topmost",True)
         self.new_window.title("Edit Account Info")
@@ -185,7 +147,7 @@ class GUI:
         old_code_label = ttk.Label(self.new_window, text="Old User Code:", font=("Roboto", "10"), background=frame["background"])
         old_code_label.place(x=50,y=70)
         old_code_entry = ttk.Entry(self.new_window, width=20)
-        old_code_entry.insert(0, account["user_code"])
+        old_code_entry.insert(0, account_info["user_code"])
         old_code_entry.place(x=150,y=70)
         old_code_entry.config(state=DISABLED)
         old_code_edit_label = ttk.Label(self.new_window, text="Edit", font=("Roboto", "10"), background=frame["background"])
@@ -196,7 +158,7 @@ class GUI:
         old_password_label = ttk.Label(self.new_window, text="Old Password:", font=("Roboto", "10"), background=frame["background"])
         old_password_label.place(x=50,y=140)
         old_password_entry = ttk.Entry(self.new_window, width=20)
-        old_password_entry.insert(0, account["password"])
+        old_password_entry.insert(0, account_info["password"])
         old_password_entry.place(x=150,y=140)
         old_password_entry.config(state=DISABLED)
         old_password_edit_label = ttk.Label(self.new_window, text="Edit", font=("Roboto", "10"), background=frame["background"])
@@ -204,7 +166,7 @@ class GUI:
         old_password_var = IntVar()
         old_password_edit_checkbox = ttk.Checkbutton(self.new_window, variable=old_password_var,onvalue=1,offvalue=0,command=lambda: toogle_entry(old_password_entry, old_password_var))
         old_password_edit_checkbox.place(x=340,y=140)
-        save_button = ttk.Button(self.new_window, text="Save Changes", width=15, command=lambda: self.save_edit_info(self.new_window, old_code_entry, old_password_entry, account=account))
+        save_button = ttk.Button(self.new_window, text="Save Changes", width=15, command=lambda: self.save_edit_info(self.new_window, old_code_entry, old_password_entry, account_info, user_account))
         save_button.place(x=150, y=200)
 
 if __name__ == "__main__":
